@@ -821,7 +821,7 @@ Material:
     - _SPECPOWER: 1
     - _SPEED: 1
     - _ScaleA: 0.4
-    - _SeasonChangeGlobal: -2
+    - _SeasonChangeGlobal: 0.6
     - _SeasonChangeGlobal1: 0.24
     - _SeasonVertexColorR: 0
     - _SeasonVertexColorR1: 0

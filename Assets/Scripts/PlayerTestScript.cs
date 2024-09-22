@@ -14,6 +14,7 @@ public class PlayerTestScript : MonoBehaviour
     public AudioManager AudioManagerScript;
     public uiManager uiManagerScript;
     public Ladder LadderScript;
+    public int collectableCount = 0;
 
 
     [Header("Game Information")]
@@ -152,6 +153,12 @@ public class PlayerTestScript : MonoBehaviour
             ObjectiveScript.ObjectiveIndicator.SetActive(false);
             ObjectiveScript.ObjectiveReached();
             AudioManagerScript.ObjectiveReached(); //play completion sound
+        }
+
+        if (other.gameObject.tag == "Collectable")
+        {
+            Destroy(other.gameObject);
+            collectableCount++;
         }
 
         

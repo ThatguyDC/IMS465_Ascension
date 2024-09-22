@@ -71,7 +71,7 @@ public class StartTimerOnTriggerTMP : MonoBehaviour
             string formattedTime = string.Format("{0:00}:{1:00}:{2:00}", hours, minutes, seconds);
 
             // Display the time in the TextMeshProUGUI element
-            timeText.text = "Time: " + formattedTime;
+            timeText.text = "Run Time: " + formattedTime;
         }
     }
 }

@@ -1,7 +1,9 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Audio;
+
 
 public class AudioManager : MonoBehaviour
 {
@@ -23,6 +25,8 @@ public class AudioManager : MonoBehaviour
     [Header("Sound Effects")]
 
     public AudioClip ObjectiveCompleteSound;
+    
+    public AudioClip[] CollectablePickupSounds;
 
     [Header("Music")]
 
@@ -44,5 +48,11 @@ public class AudioManager : MonoBehaviour
     public void ObjectiveReached()
     {
         PlayerAudio.PlayOneShot(ObjectiveCompleteSound, 1f);
+    }
+
+    public void CollectableObtained()
+    {
+        PlayerAudio.PlayOneShot(CollectablePickupSounds[0], 1f);
+
     }
 }

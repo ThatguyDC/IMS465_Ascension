@@ -4,8 +4,25 @@ using UnityEngine;
 
 public class uiManager : MonoBehaviour
 {
+
+    [Header("Main Menu UI")]
+   
+    //Difficulties
+    public GameObject EasyButton;
+    public GameObject RuggedButton;
+    public GameObject ExpertButton;
+
+    //Game Start/Quit
+    public GameObject NewGameButton;
+    public GameObject QuitButton;
+
+
+
+
     [Header("Mechanics UI")]
     private GameObject Interact;
+
+
 
 
     void Start()
@@ -17,6 +34,12 @@ public class uiManager : MonoBehaviour
     void Update()
     {
         
+    }
+
+    //Quit 
+    public void QuitGame()
+    {
+        Application.Quit();
     }
 
     public void ShowUI(GameObject uiElement) //takes game obj as arg to display 

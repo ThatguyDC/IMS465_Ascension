@@ -159,6 +159,7 @@ public class PlayerTestScript : MonoBehaviour
         {
             Destroy(other.gameObject);
             collectableCount++;
+            AudioManagerScript.CollectableObtained();
         }
 
         

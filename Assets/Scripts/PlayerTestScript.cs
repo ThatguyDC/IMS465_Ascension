@@ -1,7 +1,5 @@
 using System.Collections;
 using System.Collections.Generic;
-using System.Security.Cryptography;
-using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
@@ -29,22 +27,18 @@ public class PlayerTestScript : MonoBehaviour
     public GameObject Player;
  
 
-    
-
-    
-
     public float NormalSpeed;
     public float WalkSpeed = 50f;
     public float SprintSpeed = 65f;
-    public float ClimbSpeed = 3f; //Initial climbing speed
-    public float TargetClimbSpeed = 0f; //Speed to reduce to 
+    public float JumpHeight = 2f;
+    public float Gravity = -9.81f;
+
     private float SpeedReductionTime = 5f;  // Time over which to reduce the speed
 
  
     private float StopMovementDelay = 5f; //Time that speed is set to zero in StopMove function
 
     public bool Sprinting;
-    public bool Climbing;
 
 
     public float TurnSmoothing = 0.1f;
@@ -59,7 +53,6 @@ public class PlayerTestScript : MonoBehaviour
    
 
     private Vector3 Velocity; // Current velocity of the player
-    private float Gravity = -9.81f;
     public float GroundCheckDistance = 0.2f; // Distance to check if the player is grounded
 
 
@@ -108,6 +101,7 @@ public class PlayerTestScript : MonoBehaviour
         AnimatePlayer();
         DropObject();
         GroundCheck();
+        Jump();
 
 
 
@@ -117,6 +111,7 @@ public class PlayerTestScript : MonoBehaviour
     void FixedUpdate()
     {
         Move();
+        Jump();
         Sprint();
         
     }
@@ -183,112 +178,103 @@ public class PlayerTestScript : MonoBehaviour
 
         }
 
-        if(other.tag == "Ladder")
-        {
-            Debug.Log("Hitting Ladder");
-            Climbing = true;
-            Debug.Log(Climbing);
-        }
+        
 
         
     }
 
-    private void OnTriggerExit(Collider other)
-    {
-        if(other.tag == "Ladder")
-        {
-            Climbing = false;
-            Move();
-        }
-    }
+   
 
     #endregion
 
 
 
-    #region Movement
+    //#region Movement
     private void GroundCheck()
     {
-
-        IsGrounded = Physics.CheckSphere(GroundCheckObj.transform.position, GroundCheckDistance, GroundMask);
+        
+            IsGrounded = Physics.CheckSphere(GroundCheckObj.transform.position, GroundCheckDistance, GroundMask);
+        
 
     }
-   
+    
 
+    #region Movement
 
 
     private void Move()
-    {
-        Cursor.lockState = CursorLockMode.Locked;
-
-
-        float horizontal = Input.GetAxisRaw("Horizontal");
-        float vertical = Input.GetAxisRaw("Vertical");
-        Direction = new Vector3 (horizontal, 0f, vertical).normalized;
-
-
-        if (!Climbing && !InputDisabled)
         {
+            Cursor.lockState = CursorLockMode.Locked;
 
-            if (Direction.magnitude >= 0.1f)
+
+            float horizontal = Input.GetAxisRaw("Horizontal");
+            float vertical = Input.GetAxisRaw("Vertical");
+            Direction = new Vector3 (horizontal, 0f, vertical).normalized;
+
+
+            if (!InputDisabled)
             {
-                float TargetAngle = Mathf.Atan2(Direction.x, Direction.z) * Mathf.Rad2Deg + CameraTransform.eulerAngles.y; //returns an angle amt to turn player clockwise from player forward direction
-                float angle = Mathf.SmoothDampAngle(transform.eulerAngles.y, TargetAngle, ref TurnSmoothVelocity, TurnSmoothing);
-                transform.rotation = Quaternion.Euler(0f, angle, 0f);
-                Vector3 MoveDirection = Quaternion.Euler(0f, TargetAngle, 0f) * Vector3.forward;
-                PlayerController.Move(MoveDirection.normalized * NormalSpeed * Time.fixedDeltaTime);
 
+                if (Direction.magnitude >= 0.1f)
+                {
+                    float TargetAngle = Mathf.Atan2(Direction.x, Direction.z) * Mathf.Rad2Deg + CameraTransform.eulerAngles.y; //returns an angle amt to turn player clockwise from player forward direction
+                    float angle = Mathf.SmoothDampAngle(transform.eulerAngles.y, TargetAngle, ref TurnSmoothVelocity, TurnSmoothing);
+                    transform.rotation = Quaternion.Euler(0f, angle, 0f);
+                    Vector3 MoveDirection = Quaternion.Euler(0f, TargetAngle, 0f) * Vector3.forward;
+                    PlayerController.Move(MoveDirection.normalized * NormalSpeed * Time.fixedDeltaTime);
+
+
+                }
 
             }
 
-            // Apply gravity
-            Velocity.y = Gravity * Time.deltaTime;
-            PlayerController.Move(Velocity * Time.deltaTime);
+            
 
-        }
-        
-        else if(Climbing)
-        {
-            Climb();
-        }
+            // Apply vertical velocity (includes gravity)
+            PlayerController.Move(Velocity * Time.fixedDeltaTime);
     }
 
-    private void Sprint()
+    private void Jump()
     {
-        if (Input.GetKey(KeyCode.LeftShift))
+        // Check if the player is grounded before jumping
+        if (IsGrounded && Input.GetKeyDown(KeyCode.Space))
         {
-            //Debug.Log("Sprinting");
-            NormalSpeed = SprintSpeed; //changes player speed to sprinting
-            Sprinting = true;
+            // Calculate the jump velocity based on the desired jump height
+            Velocity.y = Mathf.Sqrt(JumpHeight * -2f * Gravity);  // Using the physics formula: v = ?(2 * height * gravity)
         }
-        else
-        {
-            NormalSpeed = WalkSpeed; //sets player speed back to walking
-            Sprinting = false;
-        }
+
+        // Apply gravity to the player
+         Velocity.y += Gravity * Time.deltaTime;
+
+        // Apply the velocity (gravity or jump) to the CharacterController
+        PlayerController.Move(Velocity * Time.deltaTime);
     }
 
-#endregion
+    private void ApplyGravity()
+        {
+            // If grounded, don't apply downward acceleration
+            if (!IsGrounded)
+            {
+                Velocity.y += Gravity * Time.deltaTime; // Apply gravity to the velocity's Y component
+            }
+        }
 
-    #region Climbing
-    private void Climb()
-    {
-        // When climbing, halt forward movement
-        Debug.Log("Player is climbing, halting forward movement");
+        private void Sprint()
+        {
+            if (Input.GetKey(KeyCode.LeftShift))
+            {
+                //Debug.Log("Sprinting");
+                NormalSpeed = SprintSpeed; //changes player speed to sprinting
+                Sprinting = true;
+            }
+            else
+            {
+                NormalSpeed = WalkSpeed; //sets player speed back to walking
+                Sprinting = false;
+            }
+        }
 
-
-        Vector3 ClimbDirection = Vector3.up; // Move upwards
-        PlayerController.Move(ClimbDirection.normalized * ClimbSpeed * Time.fixedDeltaTime);
-
-         
-
-        // Log the climbing event (optional for debugging)
-        Debug.Log("Player is climbing...");
-        
-    }
- #endregion
-
-    
+    #endregion
 
     #region Player Animation
 
@@ -317,34 +303,42 @@ public class PlayerTestScript : MonoBehaviour
             //Debug.Log("Sprint");
         }
 
+         //Falling
          if (!IsGrounded)
         {
             PlayerAnimator.SetBool("Falling", true); //Idle falling anim plays
+            Debug.Log("grounded: " + IsGrounded);
+            
         }
 
          if (IsGrounded)
         {
             PlayerAnimator.SetBool("Falling", false); //hard landing anim plays
-            CheckLandingAnimState(); //checks if landing animation is finished
-
-            
         }
+
+        
 
     }
 
-    private void CheckLandingAnimState()
+    private void CheckAnimState()
     {
-        AnimatorStateInfo stateInfo = PlayerAnimator.GetCurrentAnimatorStateInfo(0);
+        AnimatorStateInfo stateInfo = PlayerAnimator.GetCurrentAnimatorStateInfo(0); // Get the current state info for layer 0
 
-        if (stateInfo.IsName(LandingAnimState) && !InputDisabled)
+        // If any animation is currently playing and has not fully completed
+        if (stateInfo.normalizedTime < 1f && !InputDisabled)
         {
-            InputDisabled = true;  // Disable input when animation starts
+            InputDisabled = true;  // Disable input while an animation is playing
         }
-        else if (!stateInfo.IsName(LandingAnimState) && InputDisabled)
+        // If no animation is playing or the current animation has finished playing
+        else if (stateInfo.normalizedTime >= 1f && InputDisabled)
         {
-            InputDisabled = false;  // Re-enable input when animation ends
+            InputDisabled = false;  // Re-enable input after the animation finishes
+            PlayerAnimator.SetBool("AnimComplete", true);
         }
     }
+
+
+
     #endregion
 
 

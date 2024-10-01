@@ -13,7 +13,7 @@ Material:
   m_ModifiedSerializedProperties: 0
   m_ValidKeywords:
   - _LEAFFLUTTER_ON
-  - _WINDTYPE_WINDOFF
+  - _WINDTYPE_GENTLEBREEZE
   m_InvalidKeywords:
   - GentleBreeze
   - _DIRECTIONALWIND_ON
@@ -150,7 +150,7 @@ Material:
     - _Radius: 2
     - _RandomContrast: 0
     - _RandomContrastOnOff: 0
-    - _SeasonChangeGlobal: 0.6
+    - _SeasonChangeGlobal: -2
     - _SeasonVertexColorR: 0
     - _SelfShadingVertexColor: 0
     - _SimplePivotSway: 0

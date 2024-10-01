@@ -1,46 +1,4 @@
-/*using System.Collections;
-using System.Collections.Generic;
-using System.Diagnostics.Contracts;
-using UnityEngine;
 
-public class ObjectPooling : MonoBehaviour
-{
-    public GameObject ObjToPool;
-    public int PoolSize = 20;
-    private List<GameObject> PooledObjects;
-
-
-    void Start()
-    {
-        PooledObjects = new List<GameObject>();
-        for (int i = 0; i < PoolSize; i++)
-        {
-            //add random rotation and location quaternion/vector to spawn
-            GameObject obj = Instantiate(ObjToPool);
-            obj.SetActive(true);
-            PooledObjects.Add(obj);
-        }
-
-    }
-
-    public GameObject GetPooledObject()
-    {
-        foreach (var obj in PooledObjects)
-        {
-            if(!obj.activeInHierarchy)
-            {
-                return obj;
-            }
-        }
-
-        GameObject NewObj = Instantiate(ObjToPool);
-        NewObj.SetActive(false);
-        PooledObjects.Add(NewObj);
-        return NewObj;
-    }
-
-}
-*/
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -51,27 +9,29 @@ public class ObjectPooling : MonoBehaviour
     public GameObject ObjToPool;
     public int PoolSize = 20;
     public Vector2 areaSize = new Vector2(10f, 10f); // Define the area of dispersion (x and z dimensions)
-    public float maxHeight = 10f; // Max height from which to raycast downward
+    public float SpawnHeight = 10f; // Max height from which to raycast downward
     public LayerMask groundLayer; // LayerMask to specify what is considered "ground"
-    public Terrain terrain; // Reference to the terrain in the scene
-    private List<GameObject> PooledObjects;
+    private List<GameObject> PooledObjects; // List to store pooled objects
 
     // Gizmo settings
     public Color gizmoColor = Color.green; // Color for the gizmo in the Scene view
 
     void Start()
     {
-        PoolerMesh.SetActive(false);
+        PoolerMesh.SetActive(false); // Disable the pooler mesh at the start
         PooledObjects = new List<GameObject>();
+
+        // Instantiate the pool of objects
         for (int i = 0; i < PoolSize; i++)
         {
-            GameObject obj = Instantiate(ObjToPool);
-            PositionObject(obj);
-            obj.SetActive(true);
-            PooledObjects.Add(obj);
+            GameObject obj = Instantiate(ObjToPool);  // Create a new object
+            PositionObject(obj);                      // Position the object on the ground layer
+            obj.SetActive(true);                      // Activate the object
+            PooledObjects.Add(obj);                   // Add it to the pooled list
         }
     }
 
+    // Get an inactive object from the pool
     public GameObject GetPooledObject()
     {
         foreach (var obj in PooledObjects)
@@ -83,46 +43,33 @@ public class ObjectPooling : MonoBehaviour
             }
         }
 
+        // If no inactive objects, create a new one
         GameObject newObj = Instantiate(ObjToPool);
         PositionObject(newObj);
-        newObj.SetActive(false);
+        newObj.SetActive(false); // Keep it deactivated until needed
         PooledObjects.Add(newObj);
         return newObj;
     }
 
+    // Position the object on the ground layer
     private void PositionObject(GameObject obj)
     {
-        // Randomly position within the defined area
+        // Randomly position the object within the defined area (x and z coordinates)
         Vector3 randomPosition = new Vector3(
             Random.Range(-areaSize.x / 2, areaSize.x / 2),
-            maxHeight,
+            0f,  // We'll override the Y value with a set height below
             Random.Range(-areaSize.y / 2, areaSize.y / 2)
         );
 
-        randomPosition += transform.position; // Offset by the object's position
+        randomPosition += transform.position; // Offset by the pooler's position
 
-        // Get the terrain height at the (x, z) coordinates
-        if (terrain != null)
-        {
-            randomPosition.y = terrain.SampleHeight(randomPosition) + terrain.transform.position.y;
-        }
-        else
-        {
-            // Use a raycast if no terrain is assigned
-            RaycastHit hit;
-            if (Physics.Raycast(randomPosition, Vector3.down, out hit, Mathf.Infinity, groundLayer))
-            {
-                randomPosition.y = hit.point.y; // Set the Y position to the ground's height
-            }
-            else
-            {
-                randomPosition.y = 0; // Default to ground level if no hit (adjust as needed)
-            }
-        }
+        // Set a fixed Y position (height)
+        randomPosition.y = transform.position.y; // Use maxHeight as the fixed spawn height
 
         obj.transform.position = randomPosition;
         //obj.transform.rotation = Random.rotation; // Optionally add random rotation
     }
+
 
     // Draw the debug zone in the scene
     private void OnDrawGizmos()
@@ -137,6 +84,3 @@ public class ObjectPooling : MonoBehaviour
         Gizmos.DrawWireCube(areaCenter, areaSize3D);
     }
 }
-
-
-

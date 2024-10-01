@@ -23,9 +23,10 @@ public class Timer : MonoBehaviour
     {
         if (counting && timeLeft > 0)
         {
-            timeLeft -= Time.deltaTime;
+            timeLeft += Time.deltaTime;
             updateTime(timeLeft);
-        }//else{
+        }
+        //else{
         //     timeLeft = 0;
         //     Debug.Log("Time is up!");
         //     counting = false;

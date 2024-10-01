@@ -1,9 +1,15 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using TMPro;
 
 public class uiManager : MonoBehaviour
 {
+
+    [Header("Script Comms")]
+
+    public PlayerTestScript PlayerScript;
+
 
     [Header("Main Menu UI")]
    
@@ -15,6 +21,10 @@ public class uiManager : MonoBehaviour
     //Game Start/Quit
     public GameObject NewGameButton;
     public GameObject QuitButton;
+
+
+    //Gameplay UI
+    public TMP_Text GoldCounter;
 
 
 
@@ -33,7 +43,12 @@ public class uiManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        
+        UpdateText();
+    }
+
+    private void UpdateText()
+    {
+        GoldCounter.text = "Gold Collected: " + PlayerScript.collectableCount.ToString(); // Update the TextMeshPro text
     }
 
     //Quit 

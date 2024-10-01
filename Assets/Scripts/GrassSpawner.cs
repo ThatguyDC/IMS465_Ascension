@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class GrassSpawner : MonoBehaviour
+public class ObjectSpawner : MonoBehaviour
 {
     public GameObject PoolerMesh;
     public GameObject ObjToPool;

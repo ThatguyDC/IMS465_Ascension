@@ -12,14 +12,16 @@ public class PlayerTestScript : MonoBehaviour
     public AudioManager AudioManagerScript;
     public uiManager uiManagerScript;
     public Ladder LadderScript;
-    public int collectableCount = 0;
+    
 
 
     [Header("Game Information")]
     //Game State
     public bool IsPaused = false;
+    public int collectableCount = 0;
+    public int GoldValue = 1;
+    public int DiamondValue = 5;
 
-    
 
     [Header("Player Information")]
 
@@ -150,14 +152,20 @@ public class PlayerTestScript : MonoBehaviour
             AudioManagerScript.ObjectiveReached(); //play completion sound
         }
 
-        if (other.gameObject.tag == "Collectable")
+        if (other.gameObject.tag == "Gold")
         {
             Destroy(other.gameObject);
-            collectableCount++;
+            collectableCount += GoldValue;
+            AudioManagerScript.CollectableObtained();
+        }
+        else if (other.gameObject.tag == "Diamond")
+        {
+            Destroy(other.gameObject);
+            collectableCount += DiamondValue;
             AudioManagerScript.CollectableObtained();
         }
 
-        
+
     }
     
     private void OnTriggerStay(Collider other)

@@ -48,7 +48,7 @@ public class uiManager : MonoBehaviour
 
     private void UpdateText()
     {
-        GoldCounter.text = "Gold Collected: " + PlayerScript.collectableCount.ToString(); // Update the TextMeshPro text
+        GoldCounter.text = "Minerals Collected: " + PlayerScript.collectableCount.ToString(); // Update the TextMeshPro text
     }
 
     //Quit 

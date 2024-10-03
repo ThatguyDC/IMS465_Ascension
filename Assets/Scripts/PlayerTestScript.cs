@@ -253,7 +253,7 @@ public class PlayerTestScript : MonoBehaviour
             // Calculate the jump velocity based on the desired jump height
             Velocity.y = Mathf.Sqrt(JumpHeight * -2f * Gravity);  // Using the physics formula: v = ?(2 * height * gravity)
         }
-
+        IsGrounded = false;
         Jumped = true;
 
         // Apply gravity to the player
@@ -262,10 +262,9 @@ public class PlayerTestScript : MonoBehaviour
         // Apply the velocity (gravity or jump) to the CharacterController
         PlayerController.Move(Velocity * Time.deltaTime);
 
-        if (IsGrounded)
-        {
+        
             Jumped = false;
-        }
+        
         
     }
 
@@ -324,16 +323,23 @@ public class PlayerTestScript : MonoBehaviour
             //Debug.Log("Sprint");
         }
 
-         //Falling
-         if (Jumped)
+        //Falling
+        if (Jumped)
         {
-            
+
             PlayerAnimator.SetBool("Jumped", true); //Idle falling anim plays
+            PlayerAnimator.SetBool("Falling", true); //Idle falling anim plays
+
             //Debug.Log("grounded: " + IsGrounded);
             //CheckAnimState();
+        }
+        else if (!Jumped)
+        {
+            PlayerAnimator.SetBool("Jumped", false); //Idle falling anim plays
 
         }
-         else if (!Jumped && !IsGrounded)
+
+        else if (!Jumped && !IsGrounded)
         {
             PlayerAnimator.SetBool("Falling", true); //Idle falling anim plays
             //Debug.Log("grounded: " + IsGrounded);

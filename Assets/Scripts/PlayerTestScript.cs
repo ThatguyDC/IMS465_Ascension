@@ -41,6 +41,8 @@ public class PlayerTestScript : MonoBehaviour
     private float StopMovementDelay = 5f; //Time that speed is set to zero in StopMove function
 
     public bool Sprinting;
+    public bool Jumped;
+
 
 
     public float TurnSmoothing = 0.1f;
@@ -245,17 +247,26 @@ public class PlayerTestScript : MonoBehaviour
     private void Jump()
     {
         // Check if the player is grounded before jumping
-        if (IsGrounded && Input.GetKeyDown(KeyCode.Space))
+        if (!InputDisabled && IsGrounded && Input.GetKeyDown(KeyCode.Space))
         {
+            
             // Calculate the jump velocity based on the desired jump height
             Velocity.y = Mathf.Sqrt(JumpHeight * -2f * Gravity);  // Using the physics formula: v = ?(2 * height * gravity)
         }
 
-        // Apply gravity to the player
-         Velocity.y += Gravity * Time.deltaTime;
+        Jumped = true;
 
+        // Apply gravity to the player
+        Velocity.y += Gravity * Time.deltaTime;
+        
         // Apply the velocity (gravity or jump) to the CharacterController
         PlayerController.Move(Velocity * Time.deltaTime);
+
+        if (IsGrounded)
+        {
+            Jumped = false;
+        }
+        
     }
 
     private void ApplyGravity()
@@ -288,6 +299,8 @@ public class PlayerTestScript : MonoBehaviour
 
     private void AnimatePlayer()
     {
+
+        //Debug.Log("Grounded? " + IsGrounded);
         //Idle
         if (Direction == Vector3.zero)
         {
@@ -312,16 +325,25 @@ public class PlayerTestScript : MonoBehaviour
         }
 
          //Falling
-         if (!IsGrounded)
+         if (Jumped)
+        {
+            
+            PlayerAnimator.SetBool("Jumped", true); //Idle falling anim plays
+            //Debug.Log("grounded: " + IsGrounded);
+            //CheckAnimState();
+
+        }
+         else if (!Jumped && !IsGrounded)
         {
             PlayerAnimator.SetBool("Falling", true); //Idle falling anim plays
-            Debug.Log("grounded: " + IsGrounded);
-            
-        }
+            //Debug.Log("grounded: " + IsGrounded);
 
-         if (IsGrounded)
+        }
+        if (IsGrounded)
         {
+            
             PlayerAnimator.SetBool("Falling", false); //hard landing anim plays
+            //CheckAnimState();
         }
 
         

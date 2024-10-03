@@ -496,7 +496,7 @@ Material:
     - _SPCPOW: 1
     - _SPECPOWER: 1
     - _ScaleA: 0.4
-    - _SeasonChangeGlobal: -2
+    - _SeasonChangeGlobal: -1.3
     - _SeasonVertexColorR: 0
     - _SecondaryFactor: 0.64
     - _Shininess: 0.1
@@ -514,7 +514,7 @@ Material:
     - _SquashAmount: 1
     - _SrcBlend: 1
     - _StrongWind: 1
-    - _StrongWindSpeed: 1
+    - _StrongWindSpeed: 1.56
     - _StrongWindSpeed1: 1
     - _TAOOffset: 0
     - _TAOScale: 1

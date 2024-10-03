@@ -821,7 +821,7 @@ Material:
     - _SPECPOWER: 1
     - _SPEED: 1
     - _ScaleA: 0.4
-    - _SeasonChangeGlobal: -2
+    - _SeasonChangeGlobal: -1.3
     - _SeasonChangeGlobal1: 0.24
     - _SeasonVertexColorR: 0
     - _SeasonVertexColorR1: 0
@@ -866,7 +866,7 @@ Material:
     - _SrcBlend: 1
     - _StrongPulse: 0
     - _StrongWind: 0
-    - _StrongWindSpeed: 1
+    - _StrongWindSpeed: 1.56
     - _StrongWindSpeed1: 1
     - _Stupidsway: 1
     - _SubsurfaceAmbientValue: 0.2

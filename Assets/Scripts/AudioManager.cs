@@ -30,19 +30,25 @@ public class AudioManager : MonoBehaviour
 
     [Header("Music")]
 
-    public AudioClip LevelAmbience;
+    public AudioClip LevelMusic;
 
 
     void Start()
     {
         PlayerScript = Player.GetComponent<PlayerTestScript>(); //gets player script from player game object
-
+        
     }
 
     // Update is called once per frame
     void Update()
     {
         
+    }
+
+    public void PlayLevelMusic()
+    {
+        PlayerAudio.PlayOneShot(LevelMusic, 1f);
+
     }
 
     public void ObjectiveReached()

@@ -12,11 +12,12 @@ public class PlayerTestScript : MonoBehaviour
     public AudioManager AudioManagerScript;
     public uiManager uiManagerScript;
     public Ladder LadderScript;
-    
+
 
 
     [Header("Game Information")]
     //Game State
+    [SerializeField] public bool GameOver;
     public bool IsPaused = false;
     public int collectableCount = 0;
     public int GoldValue = 1;
@@ -49,6 +50,8 @@ public class PlayerTestScript : MonoBehaviour
     public float TurnSmoothVelocity;
     public Vector3 Direction;
 
+
+    [Header("Grounding")]
     //Grounding Info
 
     public LayerMask GroundMask; // Layer mask to specify what layers are considered ground
@@ -66,6 +69,15 @@ public class PlayerTestScript : MonoBehaviour
     private string LandingAnimState = "Hard Landing";  // The name of the animation state
 
 
+    [Header("Effects")]
+    //Effects
+
+    public GameObject[] SpeedLines;
+
+
+
+
+    [Header("Audio Source")]
     //Audio
 
     public AudioSource PlayerAudioSource;
@@ -98,6 +110,9 @@ public class PlayerTestScript : MonoBehaviour
     private void Start()
     {
         PlayerAnimator = GetComponent<Animator>();
+        AudioManagerScript.PlayLevelMusic();
+        
+        
     }
     private void Update()
     {
@@ -284,15 +299,21 @@ public class PlayerTestScript : MonoBehaviour
                 //Debug.Log("Sprinting");
                 NormalSpeed = SprintSpeed; //changes player speed to sprinting
                 Sprinting = true;
+                ActivateSprintVFX();
             }
             else
             {
                 NormalSpeed = WalkSpeed; //sets player speed back to walking
                 Sprinting = false;
+                DeactivateSprintVFX();
             }
         }
 
+
+
     #endregion
+
+
 
     #region Player Animation
 
@@ -373,7 +394,37 @@ public class PlayerTestScript : MonoBehaviour
         }
     }
 
+    #endregion
 
+    #region VFX
+
+    private void ActivateSprintVFX()
+    {
+        for (int i = 0; i < SpeedLines.Length; i++)
+        {
+
+            if (SpeedLines[i].activeSelf)
+            {
+                //do nothing
+            }
+
+            else
+            {
+                //set all objects active
+                SpeedLines[i].SetActive(true);
+                Debug.Log("Speedline " + i + " was activated.");
+            }
+        }
+    }
+
+    private void DeactivateSprintVFX()
+    {
+        for (int i = 0; i < SpeedLines.Length; i++)
+        {
+            SpeedLines[i].SetActive(false);
+            Debug.Log("Speedline " + i + " was activated.");
+        }
+    }
 
     #endregion
 

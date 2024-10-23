@@ -8,7 +8,7 @@ using UnityEngine.UI;
 public class Timer : MonoBehaviour
 {
 
-    private PlayerTestScript Player;
+    public PlayerTestScript Player;
 
     public float timeLeft = 180;
     public bool counting = true;
@@ -29,12 +29,13 @@ public class Timer : MonoBehaviour
             updateTime(timeLeft);
         }
 
-        else{
+        else 
+        {
              timeLeft = 0;
-             Debug.Log("Time is up!");
-             counting = false;
             Player.GameOver = true;
-        }
+
+            Debug.Log("Time is up!");
+             counting = false;        }
     }
 
     void updateTime(float currentTime)

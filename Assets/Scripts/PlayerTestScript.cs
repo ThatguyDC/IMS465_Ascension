@@ -119,8 +119,9 @@ public class PlayerTestScript : MonoBehaviour
         
         AnimatePlayer();
         DropObject();
-        GroundCheck();
         Jump();
+        GroundCheck();
+        Debug.Log("Grounded?" + IsGrounded);
 
 
 
@@ -138,6 +139,8 @@ public class PlayerTestScript : MonoBehaviour
     private void OnDrawGizmos()
     {
         DebugCollider();
+        Gizmos.color = Color.red;
+        Gizmos.DrawWireSphere(GroundCheckObj.transform.position, GroundCheckDistance);
 
     }
 
@@ -187,6 +190,9 @@ public class PlayerTestScript : MonoBehaviour
     
     private void OnTriggerStay(Collider other)
     {
+        
+        
+        
         if (other.gameObject.layer == 6 && CarryingObject == false) //if object is on layer 6, aka PickupLayer, then do stuff
         {
             Debug.Log("Object on PickupLayer detected");
@@ -203,6 +209,8 @@ public class PlayerTestScript : MonoBehaviour
 
         }
 
+       
+
         
 
         
@@ -217,10 +225,7 @@ public class PlayerTestScript : MonoBehaviour
     //#region Movement
     private void GroundCheck()
     {
-        
             IsGrounded = Physics.CheckSphere(GroundCheckObj.transform.position, GroundCheckDistance, GroundMask);
-        
-
     }
     
 

@@ -43,6 +43,7 @@ public class PlayerTestScript : MonoBehaviour
 
     public bool Sprinting;
     public bool Jumped;
+    
 
 
 

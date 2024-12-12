@@ -18,7 +18,7 @@ public class AudioManager : MonoBehaviour
     [Header("Audio Sources")]
 
     [SerializeField] public AudioSource PlayerAudio;
-
+    [SerializeField] public AudioSource TitleAudio; 
 
     [Header("Audio Clips")]
 
@@ -27,6 +27,8 @@ public class AudioManager : MonoBehaviour
     public AudioClip ObjectiveCompleteSound;
     
     public AudioClip[] CollectablePickupSounds;
+
+    public AudioClip ButtonClick;
 
     [Header("Music")]
 
@@ -60,5 +62,10 @@ public class AudioManager : MonoBehaviour
     {
         PlayerAudio.PlayOneShot(CollectablePickupSounds[0], 1f);
 
+    }
+
+    public void PlayClick()
+    {
+        TitleAudio.PlayOneShot(ButtonClick);
     }
 }

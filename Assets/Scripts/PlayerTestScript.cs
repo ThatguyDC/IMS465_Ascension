@@ -23,6 +23,10 @@ public class PlayerTestScript : MonoBehaviour
     public int GoldValue = 1;
     public int DiamondValue = 5;
 
+    //keybinds
+    public KeyCode PauseKey = KeyCode.F;
+
+
 
     [Header("Player Information")]
 
@@ -43,11 +47,7 @@ public class PlayerTestScript : MonoBehaviour
 
     public bool Sprinting;
     public bool Jumped;
-    
-    
-
-
-
+ 
     public float TurnSmoothing = 0.1f;
     public float TurnSmoothVelocity;
     public Vector3 Direction;
@@ -113,17 +113,22 @@ public class PlayerTestScript : MonoBehaviour
     {
         PlayerAnimator = GetComponent<Animator>();
         AudioManagerScript.PlayLevelMusic();
-        
-        
+        Cursor.lockState = CursorLockMode.Locked;
+
+
+
     }
     private void Update()
     {
+
         
         AnimatePlayer();
         DropObject();
         Jump();
         GroundCheck();
         Debug.Log("Grounded?" + IsGrounded);
+
+        PauseCheck(); //ensures game isn't meant to be stopped
 
 
 
@@ -145,8 +150,22 @@ public class PlayerTestScript : MonoBehaviour
 
     }
 
+    #region Game State
+
+    public void PauseCheck()
+    {
+        if (Input.GetKey(PauseKey)) //if pause key is pressed 
+        {
+            IsPaused = true; //the game state is paused.
+            InputDisabled = true; //prevents movement in background while pause screen is active
+        }
+    }
+
+
+    #endregion
+
     #region Colliders
-    
+
 
     private void DebugCollider()
     {
@@ -217,25 +236,19 @@ public class PlayerTestScript : MonoBehaviour
         
     }
 
-   
+
 
     #endregion
 
-
-
-    //#region Movement
-    private void GroundCheck()
-    {
-            IsGrounded = Physics.CheckSphere(GroundCheckObj.transform.position, GroundCheckDistance, GroundMask);
-    }
-    
-
     #region Movement
 
+    private void GroundCheck()
+    {
+        IsGrounded = Physics.CheckSphere(GroundCheckObj.transform.position, GroundCheckDistance, GroundMask);
+    }
 
     private void Move()
         {
-            Cursor.lockState = CursorLockMode.Locked;
 
 
             float horizontal = Input.GetAxisRaw("Horizontal");
@@ -318,8 +331,6 @@ public class PlayerTestScript : MonoBehaviour
 
 
     #endregion
-
-
 
     #region Player Animation
 
@@ -433,7 +444,6 @@ public class PlayerTestScript : MonoBehaviour
     }
 
     #endregion
-
 
     #region Object Interaction
     public void PickUpObject(GameObject ObjectToSpawn, GameObject RefPoint, GameObject SourceObj) //typeOf GameObject to indicate what is being passed through

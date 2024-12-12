@@ -1,5 +1,4 @@
-using System.Collections;
-using System.Collections.Generic;
+
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -29,13 +28,14 @@ public class Timer : MonoBehaviour
             updateTime(timeLeft);
         }
 
-        else 
+        else
         {
-             timeLeft = 0;
+            timeLeft = 0;
             Player.GameOver = true;
 
             Debug.Log("Time is up!");
-             counting = false;        }
+            counting = false;
+        }
     }
 
     void updateTime(float currentTime)

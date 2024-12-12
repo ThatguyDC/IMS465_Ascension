@@ -12,7 +12,8 @@ public class PlayerTestScript : MonoBehaviour
     public AudioManager AudioManagerScript;
     public uiManager uiManagerScript;
     public Ladder LadderScript;
-    public Timer TimerScript; 
+    public Timer TimerScript;
+    public Dialogue DialogueScript;
 
 
 
@@ -24,6 +25,12 @@ public class PlayerTestScript : MonoBehaviour
     public int SilverValue = 1;
     public int GoldValue = 3;
     public int DiamondValue = 5;
+
+
+    public bool InDialogue = false;
+    public string objectTag = string.Empty;
+    public string currentNPC = string.Empty;
+    public string[] npcTags;
 
     //keybinds
     public KeyCode PauseKey = KeyCode.F;
@@ -218,6 +225,23 @@ public class PlayerTestScript : MonoBehaviour
         }
         */
 
+        Debug.Log(other.tag);
+        objectTag = other.tag;
+
+        for (int i = 0; i < npcTags.Length; i++)
+        {
+            if (objectTag == npcTags[i]) //if obj tag is in the npc list of tags
+            {
+                DialogueScript.DialogueBox.SetActive(true);
+                currentNPC = npcTags[i]; //set npc tag to index
+                DialogueScript.StartDialogue(); //starts dialogue interaction
+            }
+            else
+            {
+                //object trigger is not an NPC, do nothing
+            }
+        }
+
         if (other.gameObject.tag == "GameWon" && TimerScript.timeLeft > 0)
         {
             TimerScript.counting = false; //Game was won, and is over. Holds timer value on remaining time.
@@ -242,6 +266,23 @@ public class PlayerTestScript : MonoBehaviour
             Destroy(other.gameObject);
             collectableCount += DiamondValue;
             AudioManagerScript.CollectableObtained();
+        }
+
+                Debug.Log(other.tag);
+        objectTag = other.tag;
+
+        for (int i = 0; i < npcTags.Length; i++)
+        {
+            if (objectTag == npcTags[i]) //if obj tag is in the npc list of tags
+            {
+                DialogueScript.DialogueBox.SetActive(true);
+                currentNPC = npcTags[i]; //set npc tag to index
+                DialogueScript.StartDialogue(); //starts dialogue interaction
+            }
+            else 
+            {
+            //object trigger is not an NPC, do nothing
+            }
         }
 
 

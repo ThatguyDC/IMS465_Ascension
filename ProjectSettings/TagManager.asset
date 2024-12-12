@@ -8,6 +8,9 @@ TagManager:
   - Gold
   - Diamond
   - Spawner
+  - Collectable
+  - Silver
+  - GameWon
   layers:
   - Default
   - TransparentFX

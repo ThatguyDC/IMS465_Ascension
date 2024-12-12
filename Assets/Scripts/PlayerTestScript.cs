@@ -12,6 +12,7 @@ public class PlayerTestScript : MonoBehaviour
     public AudioManager AudioManagerScript;
     public uiManager uiManagerScript;
     public Ladder LadderScript;
+    public Timer TimerScript; 
 
 
 
@@ -20,7 +21,8 @@ public class PlayerTestScript : MonoBehaviour
     [SerializeField] public bool GameOver;
     public bool IsPaused = false;
     public int collectableCount = 0;
-    public int GoldValue = 1;
+    public int SilverValue = 1;
+    public int GoldValue = 3;
     public int DiamondValue = 5;
 
     //keybinds
@@ -126,7 +128,7 @@ public class PlayerTestScript : MonoBehaviour
         DropObject();
         Jump();
         GroundCheck();
-        Debug.Log("Grounded?" + IsGrounded);
+        //Debug.Log("Grounded?" + IsGrounded);
 
         PauseCheck(); //ensures game isn't meant to be stopped
 
@@ -161,6 +163,28 @@ public class PlayerTestScript : MonoBehaviour
         }
     }
 
+    public void MedalCheck()
+    {
+        //This function is written and called under the assumption that
+        //the player has beaten the game with sufficient time left on the clock.
+
+        if (PlayerPrefs.GetInt("Difficulty") == 1)
+        {
+            PlayerPrefs.SetInt("EasyMedalWon", 1); //activates climber's badge medal in title screen
+        }
+        else if (PlayerPrefs.GetInt("Difficulty") == 2)
+        {
+            PlayerPrefs.SetInt("MedMedalWon", 1); //activates adventurer's seal in title screen
+        }
+        if (PlayerPrefs.GetInt("Difficulty") == 3)
+        {
+            PlayerPrefs.SetInt("HardMedalWon", 1); //activates expert license in title screen
+        }
+
+        PlayerPrefs.Save(); //store all medal values as needed into prefs for update on title screen
+
+    }
+
 
     #endregion
 
@@ -185,14 +209,29 @@ public class PlayerTestScript : MonoBehaviour
     #region Triggers
     private void OnTriggerEnter(Collider other)
     {
+        /*
         if (other.gameObject.tag == "EndPoint")
         {
             ObjectiveScript.ObjectiveIndicator.SetActive(false);
             ObjectiveScript.ObjectiveReached();
             AudioManagerScript.ObjectiveReached(); //play completion sound
         }
+        */
 
-        if (other.gameObject.tag == "Gold")
+        if (other.gameObject.tag == "GameWon" && TimerScript.timeLeft > 0)
+        {
+            TimerScript.counting = false; //Game was won, and is over. Holds timer value on remaining time.
+            MedalCheck();
+        }
+
+        if (other.gameObject.tag == "Silver")
+        {
+            Destroy(other.gameObject);
+            collectableCount += SilverValue;
+            AudioManagerScript.CollectableObtained();
+        }
+
+        else if (other.gameObject.tag == "Gold")
         {
             Destroy(other.gameObject);
             collectableCount += GoldValue;

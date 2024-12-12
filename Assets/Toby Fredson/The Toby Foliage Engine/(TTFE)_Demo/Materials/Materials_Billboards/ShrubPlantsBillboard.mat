@@ -181,7 +181,7 @@ Material:
     - _Radius1: 2
     - _RandomContrast: 1
     - _RandomContrastOnOff: 0
-    - _SeasonChangeGlobal: 2
+    - _SeasonChangeGlobal: 0.6
     - _SeasonChnageA: 0
     - _SeasonChnageB: 0
     - _SeasonVertexColorR: 0
@@ -194,7 +194,7 @@ Material:
     - _SpecularHighlights: 1
     - _SpecularPower: 0
     - _SrcBlend: 1
-    - _StrongWindSpeed: 1.56
+    - _StrongWindSpeed: 1
     - _ToggleSwitch0: 0
     - _TranslucencyPower: 5
     - _TranslucencyRange: 1

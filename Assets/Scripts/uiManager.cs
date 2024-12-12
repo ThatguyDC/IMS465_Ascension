@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
+using UnityEngine.SceneManagement;
 
 public class uiManager : MonoBehaviour
 {
@@ -10,21 +11,34 @@ public class uiManager : MonoBehaviour
 
     public PlayerTestScript PlayerScript;
     public DifficultyManager DifficultyScript;
+    public SceneSet SceneScript;
 
-    [Header("Main Menu UI")]
+    [Header("Difficulties")]
    
     //Difficulties
     public GameObject EasyButton;
     public GameObject RuggedButton;
     public GameObject ExpertButton;
 
+    [Header("Medal Placeholders")]
+    //Medal Placeholders
+
+    public GameObject EasyPH;
+    public GameObject MedPH;
+    public GameObject HardPH;
+
+
+    [Header("Medals")]
+    //Medals
+    public GameObject EasyMedal;
+    public GameObject MedMedal;
+    public GameObject HardMedal;
+
+
+    [Header("Start/Quit")]
     //Game Start/Quit
     public GameObject NewGameButton;
     public GameObject QuitButton;
-
-
-    //Gameplay UI
-    public TMP_Text GoldCounter;
 
 
     [Header("Pause UI")]
@@ -33,9 +47,16 @@ public class uiManager : MonoBehaviour
     public TMP_Text DifficultyLabel;
     private int DifficultyNum;
 
-    [Header("Mechanics UI")]
-    private GameObject Interact;
 
+    [Header("Fail UI")]
+    public GameObject FailMenu;
+
+
+    [Header("Mechanics UI")]
+    //Gameplay UI
+
+    public TMP_Text GoldCounter;
+    private GameObject Interact;
 
 
 
@@ -48,6 +69,14 @@ public class uiManager : MonoBehaviour
     {
         UpdateText();
         UpdateDifficulty();
+        if (SceneScript.ActiveSceneName == "TitleScreen")
+        {
+            UpdateMedals(); //checks player prefs for medal conditions being met in-game
+        }
+        else
+        {
+            //We are in-game, and medals can't be updated.
+        }
         OpenMenu();
     }
 
@@ -105,6 +134,43 @@ public class uiManager : MonoBehaviour
             //technically an error, but it's fine for this project
         }
     }
+
+    private void UpdateMedals()
+    {
+        
+
+        if (PlayerPrefs.GetInt("EasyMedalWon") == 1)
+        {
+            EasyPH.SetActive(false);
+            EasyMedal.SetActive(true);
+
+        }
+        else
+        {
+            //no medal earned
+        }
+        if (PlayerPrefs.GetInt("MedMedalWon") == 1)
+        {
+            MedPH.SetActive(false);
+            MedMedal.SetActive(true);
+        }
+        else
+        {
+            //no medal earned
+        }
+        if (PlayerPrefs.GetInt("HardMedalWon") == 1)
+        {
+            HardPH.SetActive(false);
+            HardMedal.SetActive(true);
+            
+        }
+        else
+        {
+            //no medal earned
+        }
+
+    }
+
 
         //Quit and Resume
 
